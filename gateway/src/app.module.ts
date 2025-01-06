@@ -3,6 +3,6 @@ import { NatsModule } from './common';
 import { PatientsModule } from './patients/patients.module';
 
 @Module({
-  imports: [NatsModule, PatientsModule],
+  imports: [PatientsModule, NatsModule],
 })
 export class AppModule {}

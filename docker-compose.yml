@@ -8,13 +8,13 @@ services:
       - "4222:4222"
       - "8222:8222"
 
-  postgres:
-    image: postgres:15-alpine
-    container_name: ehr_postgres
+  ehr_database:
+    image: postgres:16.2
+    container_name: ehr_database
     environment:
-      POSTGRES_USER: ehr_user
-      POSTGRES_PASSWORD: ehr_emapta
-      POSTGRES_DB: ehr_db
+      POSTGRES_USER: ehruser
+      POSTGRES_PASSWORD: ehremapta
+      POSTGRES_DB: ehrdb
     ports:
       - "5432:5432"
     volumes:
