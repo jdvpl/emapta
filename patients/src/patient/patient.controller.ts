@@ -1,8 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { PatientService } from './services/patient.service';
 
 @Controller()
 export class PatientController {
@@ -10,26 +9,16 @@ export class PatientController {
 
   @MessagePattern('createPatient')
   create(@Payload() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+    return this.patientService.createPatient(createPatientDto);
   }
 
   @MessagePattern('findAllPatient')
   findAll() {
-    return this.patientService.findAll();
+    return this.patientService.getAllPatients();
   }
 
   @MessagePattern('findOnePatient')
   findOne(@Payload() id: number) {
-    return this.patientService.findOne(id);
-  }
-
-  @MessagePattern('updatePatient')
-  update(@Payload() updatePatientDto: UpdatePatientDto) {
-    return this.patientService.update(updatePatientDto.id, updatePatientDto);
-  }
-
-  @MessagePattern('removePatient')
-  remove(@Payload() id: number) {
-    return this.patientService.remove(id);
+    return this.patientService.getPatient(id);
   }
 }

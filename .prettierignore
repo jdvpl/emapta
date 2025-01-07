@@ -1,0 +1,36 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ignore files of vim
+*.swp
+
+.vscode
+.vscode/settings.json
+# dependencies
+/node_modules
+/.pnp
+/.yarn
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+*.env
+
+package-lock.json
+yarn.lock
+
+# files
+mockServiceWorker.js
+*.yaml
+deploy
+devops

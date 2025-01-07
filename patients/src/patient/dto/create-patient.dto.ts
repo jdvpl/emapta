@@ -1,69 +1,59 @@
 import {
   IsString,
+  IsDateString,
   IsEmail,
-  IsNotEmpty,
-  IsDate,
   IsArray,
   IsOptional,
 } from 'class-validator';
 
 export class CreatePatientDto {
   @IsString()
-  @IsNotEmpty()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
   gender: string;
 
-  @IsDate()
+  @IsDateString()
   dob: Date;
 
   @IsString()
-  @IsNotEmpty()
   address: string;
 
   @IsString()
-  @IsNotEmpty()
   phone: string;
 
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  emergencyContact: string;
-
-  @IsString()
-  @IsNotEmpty()
-  insuranceProvider: string;
-
-  @IsString()
-  @IsNotEmpty()
-  insurancePolicyNumber: string;
-
-  @IsString()
+  @IsArray()
   @IsOptional()
-  primaryCarePhysician?: string;
+  emergencyContacts?: any[];
 
   @IsArray()
   @IsOptional()
-  allergies?: string[];
+  insurance?: any[];
 
   @IsArray()
   @IsOptional()
-  currentMedications?: string[];
+  medicalHistories?: any[];
 
   @IsArray()
   @IsOptional()
-  medicalHistory?: string[];
+  allergies?: any[];
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  socialHistory?: string;
+  medications?: any[];
+
+  @IsArray()
+  @IsOptional()
+  socialHistory?: any[];
 
   @IsString()
   @IsOptional()
   familyHistory?: string;
+
+  @IsString()
+  @IsOptional()
+  primaryCarePhysician?: string;
 }
