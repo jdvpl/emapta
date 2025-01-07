@@ -26,14 +26,14 @@ enum Severity {
 }
 
 model Admin {
-  id        Int        @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
-  email     String     @unique
+  email     String      @unique
   phone     String
   password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Physician Physician?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Physician Physician[]
 
   @@index([email])
   @@index([phone])
@@ -224,7 +224,7 @@ model Physician {
   appointments Appointment[]
 
   admin   Admin?    @relation(fields: [adminId], references: [id])
-  adminId Int?      @unique
+  adminId Int?
   Patient Patient[]
 
   @@index([email])

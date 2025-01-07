@@ -10,6 +10,7 @@ export class PhysicianRepository implements PhysicianRepoInterface {
 
   async createPhysician(data: any) {
     try {
+      console.log({ data });
       const physician = await this.prisma.physician.create({
         data,
       });
