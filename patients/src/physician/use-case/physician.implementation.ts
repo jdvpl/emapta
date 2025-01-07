@@ -14,11 +14,8 @@ export class PhysicianImplementation implements PhysicianInterface {
   async createPhysician(data: CreatePhysicianDto) {
     try {
       const tokenjwt = data.token;
-      data.dob = new Date(data.dob);
       const { id } = jwt.verify(tokenjwt, envs.JWT_SECRET);
       const { token, ...restBody } = data
-
-      console.log({ data, id });
       const physician = await this.physicianReporsitory.createPhysician({
         ...restBody,
         adminId: id,

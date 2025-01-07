@@ -3,8 +3,8 @@ import {
   IsEmail,
   IsEnum,
   IsPhoneNumber,
-  IsDate,
   IsOptional,
+  IsDateString,
 } from 'class-validator';
 import { Gender } from '@prisma/client';
 import { Role } from '@prisma/client';
@@ -16,8 +16,8 @@ export class CreatePhysicianDto {
   @IsEnum(Gender)
   gender: Gender;
 
-  @IsDate()
-  dob: Date;
+  @IsDateString()
+  dob: string;
 
   @IsString()
   address: string;

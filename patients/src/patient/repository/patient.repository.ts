@@ -9,6 +9,15 @@ export class PatientRepository implements PatientRepoInterface {
 
   async create(data: any) {
     try {
+      const patient = await this.prisma.patient.findUnique({
+        where: { email: data.email },
+      })
+      if (patient) {
+        throw new RpcException({
+          message: 'Patient already exists',
+          status: HttpStatus.UNAUTHORIZED,
+        });
+      }
       return this.prisma.patient.create({
         data,
       });

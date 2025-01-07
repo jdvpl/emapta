@@ -9,7 +9,6 @@ export class PatientController {
 
   @MessagePattern('createPatient')
   create(@Payload() createPatientDto: any) {
-    console.log(createPatientDto);
     return this.patientImplementation.createPatient(createPatientDto);
   }
 

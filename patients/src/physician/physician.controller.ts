@@ -8,8 +8,7 @@ export class PhysicianController {
   constructor(private readonly physicianImp: PhysicianInterface) { }
 
   @MessagePattern('createPhysician')
-  login(@Payload() loginDto) {
-    console.log(loginDto);
+  login(@Payload() loginDto: CreatePhysicianDto) {
     return this.physicianImp.createPhysician(loginDto);
   }
 }
