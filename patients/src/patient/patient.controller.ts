@@ -6,7 +6,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 
 @Controller()
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(private readonly patientService: PatientService) { }
 
   @MessagePattern('createPatient')
   create(@Payload() createPatientDto: CreatePatientDto) {
