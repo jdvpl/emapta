@@ -5,10 +5,11 @@ import * as jwt from 'jsonwebtoken';
 import { envs } from 'src/common';
 import { RpcException } from '@nestjs/microservices';
 import { CreatePhysicianDto } from '../dto/create-physician.dto';
+import { PhysicianRepoInterface } from '../repository/physician.repo.interface';
 
 @Injectable()
 export class PhysicianImplementation implements PhysicianInterface {
-  constructor(private readonly physicianReporsitory: PhysicianInterface) { }
+  constructor(private readonly physicianReporsitory: PhysicianRepoInterface) { }
 
   async createPhysician(data: CreatePhysicianDto) {
     try {
