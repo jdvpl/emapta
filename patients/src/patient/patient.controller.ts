@@ -1,24 +1,26 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreatePatientDto } from './dto/create-patient.dto';
-import { PatientService } from './services/patient.service';
+import { PatientInterface } from './use-case/patient.interface';
 
 @Controller()
 export class PatientController {
-  constructor(private readonly patientService: PatientService) { }
+  constructor(private readonly patientImplementation: PatientInterface) { }
 
   @MessagePattern('createPatient')
-  create(@Payload() createPatientDto: CreatePatientDto) {
-    return this.patientService.createPatient(createPatientDto);
+  create(@Payload() createPatientDto: any) {
+    console.log(createPatientDto);
+    return this.patientImplementation.createPatient(createPatientDto);
   }
 
   @MessagePattern('findAllPatient')
   findAll() {
-    return this.patientService.getAllPatients();
+    console.log('entrooo');
+    return this.patientImplementation.getAllPatients();
   }
 
   @MessagePattern('findOnePatient')
   findOne(@Payload() id: number) {
-    return this.patientService.getPatient(id);
+    return this.patientImplementation.getPatient(id);
   }
 }

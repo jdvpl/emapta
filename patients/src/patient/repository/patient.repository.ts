@@ -1,50 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PatientRepoInterface } from './patient.repo.interface';
+import { RpcException } from '@nestjs/microservices';
 import { CreatePatientDto } from '../dto/create-patient.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class PatientRepository {
+export class PatientRepository implements PatientRepoInterface {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(data: CreatePatientDto) {
-    const prismaData: Prisma.PatientCreateInput = {
-      ...data,
-      emergencyContacts: data.emergencyContacts
-        ? {
-          create: data.emergencyContacts,
-        }
-        : undefined,
-      insurance: data.insurance
-        ? {
-          create: data.insurance,
-        }
-        : undefined,
-      medicalHistories: data.medicalHistories
-        ? {
-          create: data.medicalHistories,
-        }
-        : undefined,
-      allergies: data.allergies
-        ? {
-          create: data.allergies,
-        }
-        : undefined,
-      medications: data.medications
-        ? {
-          create: data.medications,
-        }
-        : undefined,
-      socialHistory: data.socialHistory
-        ? {
-          create: data.socialHistory,
-        }
-        : undefined,
-    };
-
-    return this.prisma.patient.create({
-      data: prismaData,
-    });
+    try {
+      return this.prisma.patient.create({
+        data,
+      });
+    } catch (error) {
+      throw new RpcException({
+        message: error.message,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
 
   async findById(id: number) {

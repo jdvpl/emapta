@@ -1,59 +1,121 @@
 import {
   IsString,
-  IsDateString,
-  IsEmail,
-  IsArray,
   IsOptional,
+  IsArray,
+  IsDate,
+  IsEmail,
+  IsPhoneNumber,
+  IsNotEmpty,
 } from 'class-validator';
 
-export class CreatePatientDto {
+// DTO para contactos de emergencia
+class ContactCreateDto {
   @IsString()
   name: string;
 
+  @IsPhoneNumber()
+  phoneNumber: string;
+
   @IsString()
+  relationship: string;
+}
+
+// DTO para seguros
+class InsuranceCreateDto {
+  @IsString()
+  provider: string;
+
+  @IsString()
+  policyNumber: string;
+}
+
+// DTO para historias médicas
+class MedicalHistoryCreateDto {
+  @IsString()
+  history: string;
+
+  @IsDate()
+  diagnosisDate: Date;
+}
+
+// DTO para alergias
+class AllergyCreateDto {
+  @IsString()
+  allergyName: string;
+
+  @IsString()
+  severity: string;
+}
+
+// DTO para medicamentos
+class MedicationCreateDto {
+  @IsString()
+  medicationName: string;
+
+  @IsString()
+  dosage: string;
+}
+
+// DTO para historia social
+class SocialHistoryCreateDto {
+  @IsString()
+  history: string;
+}
+
+// DTO principal de paciente
+export class CreatePatientDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
   gender: string;
 
-  @IsDateString()
+  @IsDate()
   dob: Date;
 
   @IsString()
+  @IsNotEmpty()
   address: string;
 
   @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @IsEmail()
-  email: string;
+  @IsOptional() // Correo es opcional
+  email?: string;
 
   @IsArray()
-  @IsOptional()
-  emergencyContacts?: any[];
+  @IsOptional() // Lista de contactos de emergencia opcional
+  emergencyContacts?: ContactCreateDto[];
 
   @IsArray()
-  @IsOptional()
-  insurance?: any[];
+  @IsOptional() // Lista de seguros opcional
+  insurance?: InsuranceCreateDto[];
 
   @IsArray()
-  @IsOptional()
-  medicalHistories?: any[];
+  @IsOptional() // Lista de historias médicas opcional
+  medicalHistories?: MedicalHistoryCreateDto[];
 
   @IsArray()
-  @IsOptional()
-  allergies?: any[];
+  @IsOptional() // Lista de alergias opcional
+  allergies?: AllergyCreateDto[];
 
   @IsArray()
-  @IsOptional()
-  medications?: any[];
+  @IsOptional() // Lista de medicamentos opcional
+  medications?: MedicationCreateDto[];
 
   @IsArray()
-  @IsOptional()
-  socialHistory?: any[];
+  @IsOptional() // Lista de historia social opcional
+  socialHistory?: SocialHistoryCreateDto[];
 
   @IsString()
-  @IsOptional()
-  familyHistory?: string;
+  @IsNotEmpty()
+  familyHistory: string;
 
   @IsString()
-  @IsOptional()
-  primaryCarePhysician?: string;
+  @IsNotEmpty()
+  primaryCarePhysician: string;
 }

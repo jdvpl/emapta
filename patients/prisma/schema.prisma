@@ -7,33 +7,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  Male
+  Female
+  Other
+}
+
+enum Role {
+  Doctor
+  Nurse
+  Admin
+}
+
+enum Severity {
+  Mild
+  Moderate
+  Severe
+}
+
+model Admin {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  phone     String
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Physician Physician?
+
+  @@index([email])
+  @@index([phone])
+}
+
 model Patient {
-  id                   Int                 @id @default(autoincrement())
-  name                 String              @map("PATIENT_IDENT_NAME")
-  gender               String              @map("GENDER_OF_PATIENT")
-  dob                  DateTime            @map("DATE_OF_BIRTH_PATIENT")
-  address             String               @map("PATIENT_LOCATION_ADDRESS")
-  phone               String               @map("TELEPHONE_NUMBER_PATIENT")
-  email               String               @map("PATIENT_EMAIL_ID") @unique
+  id                   Int              @id @default(autoincrement())
+  name                 String           @map("PATIENT_IDENT_NAME")
+  gender               Gender           @map("GENDER_OF_PATIENT")
+  dob                  DateTime         @map("DATE_OF_BIRTH_PATIENT")
+  address              String           @map("PATIENT_LOCATION_ADDRESS")
+  phone                String           @map("TELEPHONE_NUMBER_PATIENT")
+  email                String           @unique @map("PATIENT_EMAIL_ID")
+  familyHistory        String           @map("HISTORY_FAMILY_PATIENT")
+  primaryCarePhysician Int              @map("PRIMARY_CARE_DOCTOR_PATIENT")
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
   emergencyContacts    Contact[]
-  insurance           Insurance[]
-  medicalHistories    MedicalHistory[]
-  allergies           Allergy[]
-  medications         Medication[]
-  socialHistory       SocialHistory[]
-  familyHistory       String               @map("HISTORY_FAMILY_PATIENT")
-  primaryCarePhysician String              @map("PRIMARY_CARE_DOCTOR_PATIENT")
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  insurance            Insurance[]
+  medicalHistories     MedicalHistory[]
+  allergies            Allergy[]
+  medications          Medication[]
+  socialHistory        SocialHistory[]
+  appointments         Appointment[]
+  updateLogs           UpdateLog[]
 
-  appointments        Appointment[]
+  primaryCarePhysicianRel Physician @relation(fields: [primaryCarePhysician], references: [id])
 
-  @@index([name]) 
-  @@index([phone]) 
+  @@index([name])
+  @@index([phone])
+  @@index([email])
+}
+
+model MedicalStaff {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  phone        String
+  role         Role
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+
+  @@index([email])
+  @@index([phone])
 }
 
 model Contact {
-  id           Int       @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
   phoneNumber  String
   relationship String
@@ -42,69 +91,143 @@ model Contact {
   createdAt    DateTime @default(now())
 
   @@index([phoneNumber])
+  @@index([patientId])
 }
 
 model Insurance {
-  id                   Int       @id @default(autoincrement())
-  provider             String
-  policyNumber        String
-  patientId           Int
-  patient             Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt           DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  provider     String
+  policyNumber String
+  patientId    Int
+  patient      Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
 
   @@index([policyNumber])
+  @@index([patientId])
 }
 
 model MedicalHistory {
-  id               Int       @id @default(autoincrement())
-  history          String
-  diagnosisDate    DateTime
-  patientId        Int
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt        DateTime  @default(now())
+  id            Int      @id @default(autoincrement())
+  history       String
+  diagnosisDate DateTime
+  patientId     Int
+  patient       Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
 
   @@index([diagnosisDate])
+  @@index([patientId])
 }
 
 model Allergy {
-  id               Int       @id @default(autoincrement())
-  allergyName      String
-  severity         String
-  patientId        Int
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt        DateTime  @default(now())
+  id          Int      @id @default(autoincrement())
+  allergyName String
+  severity    Severity
+  patientId   Int
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
 
   @@index([allergyName])
+  @@index([patientId])
 }
 
 model Medication {
-  id               Int       @id @default(autoincrement())
-  medicationName   String
-  dosage           String
-  patientId        Int
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt        DateTime  @default(now())
+  id             Int      @id @default(autoincrement())
+  medicationName String
+  dosage         String
+  patientId      Int
+  patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
 
   @@index([medicationName])
+  @@index([patientId])
 }
 
 model SocialHistory {
-  id               Int       @id @default(autoincrement())
-  history          String
-  patientId        Int
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt        DateTime  @default(now())
+  id        Int      @id @default(autoincrement())
+  history   String
+  patientId Int
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   @@index([history])
+  @@index([patientId])
 }
 
 model Appointment {
-  id               Int       @id @default(autoincrement())
-  date             DateTime
-  reason           String
-  patientId        Int
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  createdAt        DateTime  @default(now())
+  id             Int            @id @default(autoincrement())
+  date           DateTime
+  reason         String
+  patientId      Int
+  patient        Patient        @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  medicalStaffId Int
+  medicalStaff   MedicalStaff   @relation(fields: [medicalStaffId], references: [id], onDelete: Cascade)
+  physicianId    Int? // Este campo de relación se agrega
+  physician      Physician?     @relation(fields: [physicianId], references: [id], onDelete: Cascade) // Relación con Physician
+  createdAt      DateTime       @default(now())
+  prescriptions  Prescription[]
+  labResults     LabResult[]
 
-  @@index([date]) 
+  @@index([date])
+  @@index([patientId])
+}
+
+model Prescription {
+  id             Int         @id @default(autoincrement())
+  appointmentId  Int
+  appointment    Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  medicationName String
+  dosage         String
+  duration       String
+  createdAt      DateTime    @default(now())
+
+  @@index([appointmentId])
+  @@index([medicationName])
+}
+
+model LabResult {
+  id            Int         @id @default(autoincrement())
+  appointmentId Int
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  result        String
+  date          DateTime
+  createdAt     DateTime    @default(now())
+
+  @@index([appointmentId])
+  @@index([date])
+}
+
+model UpdateLog {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  field     String
+  oldValue  String?
+  newValue  String
+  updatedBy String // Usuario que realizó la actualización
+  timestamp DateTime @default(now())
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([timestamp])
+}
+
+model Physician {
+  id           Int           @id @default(autoincrement())
+  name         String
+  gender       Gender
+  dob          DateTime
+  address      String
+  phone        String
+  email        String        @unique
+  role         Role
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+
+  admin   Admin?    @relation(fields: [adminId], references: [id])
+  adminId Int?      @unique
+  Patient Patient[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([role])
 }
