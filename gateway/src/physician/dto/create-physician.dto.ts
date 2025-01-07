@@ -2,12 +2,22 @@ import {
   IsString,
   IsEmail,
   IsEnum,
+  IsDateString,
   IsPhoneNumber,
-  IsDate,
   IsOptional,
 } from 'class-validator';
-import { Gender } from '@prisma/client';
-import { Role } from '@prisma/client';
+
+export enum Role {
+  Doctor = 'Doctor',
+  Nurse = 'Nurse',
+  Admin = 'Admin',
+}
+
+enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
+}
 
 export class CreatePhysicianDto {
   @IsString()
@@ -16,8 +26,8 @@ export class CreatePhysicianDto {
   @IsEnum(Gender)
   gender: Gender;
 
-  @IsDate()
-  dob: Date;
+  @IsDateString()
+  dob: string;
 
   @IsString()
   address: string;
