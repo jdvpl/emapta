@@ -2,13 +2,12 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PatientRepoInterface } from './patient.repo.interface';
 import { RpcException } from '@nestjs/microservices';
-import { CreatePatientDto } from '../dto/create-patient.dto';
 
 @Injectable()
 export class PatientRepository implements PatientRepoInterface {
   constructor(private readonly prisma: PrismaService) { }
 
-  async create(data: CreatePatientDto) {
+  async create(data: any) {
     try {
       return this.prisma.patient.create({
         data,

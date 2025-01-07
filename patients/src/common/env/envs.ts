@@ -6,6 +6,7 @@ interface IEnvs {
   PORT: number;
   DATABASE_URL: string;
   RABBITMQ_URL: string;
+  JWT_SECRET: string;
   NATS_SERVERS: string[];
 }
 
@@ -14,6 +15,7 @@ const envsSchema = joi
     PORT: joi.number().required(),
     DATABASE_URL: joi.string().required(),
     RABBITMQ_URL: joi.string().required(),
+    JWT_SECRET: joi.string().required(),
     NATS_SERVERS: joi.array().items(joi.string()).required(),
   })
   .unknown(true);
@@ -34,4 +36,5 @@ export const envs = {
   DATABASE_URL: envVars.DATABASE_URL,
   NATS_SERVERS: envVars.NATS_SERVERS,
   RABBITMQ_URL: envVars.RABBITMQ_URL,
+  JWT_SECRET: envVars.JWT_SECRET,
 };
